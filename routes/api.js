@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 // const User = mongoose.model("User", user);
 
@@ -10,6 +11,7 @@ router.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
   const emailPattern = /^[a-z]+\.\d{2}\.[a-z]+@[a-z]+\.[a-z]+\.[a-z]+$/;
 
+  //checking acharya email pattern
   if (emailPattern.test(email) === false) {
     return res.status(400).json({ message: "Invalid email" });
   }
@@ -32,14 +34,18 @@ router.post("/signup", async (req, res) => {
   }
 
   try {
+    const password = req.body.password;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newUser = {
-      username,
-      email,
-      password,
+      username: req.body.username,
+      email: req.body.email,
+      password: hashedPassword,
     };
-    newUser.password = await bcrypt.hash(password, 10);
-    const user = new User(newUser);
-    await user.save();
+    console.log(hashedPassword);
+
+    await newUser.save();
     res
       .status(201)
       .json({ message: "User created successfully", user: newUser });
