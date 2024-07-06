@@ -2,17 +2,22 @@ const app = require("express")();
 const http = require("http").Server(app);
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require("cors");
+
+require("dotenv").config();
+app.use(cors({
+  origin: "http://localhost:3000",
+}))
 
 const port = process.env.PORT || 3002;
 const password = "Gzilt5phwcuIcSVK";
 const dbURL = `mongodb+srv://ranjith05chris:${password}@student-networking.al2y5ir.mongodb.net/?retryWrites=true&w=majority&appName=student-networking`;
+const localDBUrl = process.env.LOCAL_DB_URL;
 
 app.use(bodyParser.json());
 
 mongoose
-  .connect(dbURL, {
-    //   useNewUrlParser: true,
-    //   useUnifiedTopology: true,
+  .connect(localDBUrl, {
     dbName: "student-networking",
   })
   .then(() => {
