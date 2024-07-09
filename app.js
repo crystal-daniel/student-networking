@@ -33,8 +33,8 @@ db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-app.use("/api", require("./routes/signUp"));
-app.use("/api", require("./routes/signIn"));
+app.use("/signup", require("./routes/signUp"));
+app.use("/signin", require("./routes/signIn"));
 
 http.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
